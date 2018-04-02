@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <QtCore/QDir>
+#include <QString>
 
 #include "ACL.h"
 #include "Settings.h"
@@ -68,6 +69,9 @@ public:
 	unsigned int uiSession;
 	ChanACL::Permissions pPermissions;
 	int iMaxBandwidth;
+
+	QString qsOpusEncodeApplication;
+
 	int iAudioBandwidth;
 	QDir qdBasePath;
 	QMap<int, CELTCodec *> qmCodecs;

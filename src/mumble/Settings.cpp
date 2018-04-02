@@ -251,7 +251,13 @@ Settings::Settings() {
 	fVADmin = 0.80f;
 	fVADmax = 0.98f;
 
-	bUseOpusMusicEncoding = false;
+	bUseOpusMusicEncoding = true;
+	bOPUSEnableVBR = false;
+
+	eOpusEncodeApplication = Audio;
+	eOpusEncodeSignal = Music;
+
+
 
 	bTxAudioCue = false;
 	qsTxAudioCueOn = cqsDefaultPushClickOn;
@@ -378,7 +384,7 @@ Settings::Settings() {
 	bDisableCELT = false;
 	disablePublicList = false;
 	disableConnectDialogEditing = false;
-	
+
 	// Config updates
 	uiUpdateCounter = 0;
 
@@ -389,7 +395,7 @@ Settings::Settings() {
 #endif
 	dPacketLoss = 0;
 	dMaxPacketDelay = 0.0f;
-	
+
 	requireRestartToApply = false;
 
 	iMaxLogBlocks = 0;
@@ -434,7 +440,7 @@ Settings::Settings() {
 	qmMessages[Log::OtherSelfMute] = Settings::LogConsole;
 	qmMessages[Log::OtherMutedOther] = Settings::LogConsole;
 	qmMessages[Log::UserRenamed] = Settings::LogConsole;
-	
+
 	// Default theme
 	themeName = QLatin1String("Mumble");
 	themeStyleName = QLatin1String("Lite");
@@ -635,6 +641,11 @@ void Settings::load(QSettings* settings_ptr) {
 	SAVELOAD(bTransmitPosition, "audio/postransmit");
 
 	SAVELOAD(bUseOpusMusicEncoding, "codec/opus/encoder/music");
+
+	SAVELOAD(bOPUSEnableVBR, "codec/opusenablevbr");
+
+	LOADENUM(eOpusEncodeApplication, "codec/opusencodeapplication");
+	LOADENUM(eOpusEncodeSignal, "codec/opusencodesignal");
 
 	SAVELOAD(iJitterBufferSize, "net/jitterbuffer");
 	SAVELOAD(iFramesPerPacket, "net/framesperpacket");

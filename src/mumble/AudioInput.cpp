@@ -86,15 +86,38 @@ AudioInput::AudioInput() : opusBuffer(g.s.iFramesPerPacket * (SAMPLE_RATE / 100)
 	iFrameSize = SAMPLE_RATE / 100;
 
 #ifdef USE_OPUS
-	if (!g.s.bUseOpusMusicEncoding) {
-		opusState = opus_encoder_create(SAMPLE_RATE, 1, OPUS_APPLICATION_VOIP, NULL);
-		qWarning("AudioInput: Opus encoder set for VOIP");
-	} else {
-		opusState = opus_encoder_create(SAMPLE_RATE, 1, OPUS_APPLICATION_AUDIO, NULL);
-		qWarning("AudioInput: Opus encoder set for Music");
+	opus_int32 opusApplication;
+	opus_int32 opusSignal;
+
+	switch(g.s.eOpusEncodeApplication) {
+		case Settings::VOIP:
+			opusApplication = OPUS_APPLICATION_VOIP;
+			break;
+		case Settings::Audio:
+			opusApplication = OPUS_APPLICATION_AUDIO;
+			break;
+		case Settings::RestrictedLowDelay:
+			opusApplication = OPUS_APPLICATION_RESTRICTED_LOWDELAY;
+			break;
 	}
 
-	opus_encoder_ctl(opusState, OPUS_SET_VBR(0)); // CBR
+	switch(g.s.eOpusEncodeSignal) {
+		case Settings::Auto:
+			opusSignal = OPUS_AUTO;
+			break;
+		case Settings::Voice:
+			opusSignal = OPUS_SIGNAL_VOICE;
+			break;
+		case Settings::Music:
+			opusSignal = OPUS_SIGNAL_MUSIC;
+			break;
+	}
+
+	opusState = opus_encoder_create(SAMPLE_RATE, 1, opusApplication, NULL);
+
+	opus_encoder_ctl(opusState, OPUS_SET_SIGNAL(opusSignal));
+	opus_encoder_ctl(opusState, OPUS_SET_VBR(g.s.bOPUSEnableVBR));
+	opus_encoder_ctl(opusState, OPUS_SET_COMPLEXITY(10));
 #endif
 
 	qWarning("AudioInput: %d bits/s, %d hz, %d sample", iAudioQuality, iSampleRate, iFrameSize);
@@ -602,6 +625,43 @@ int AudioInput::getNetworkBandwidth(int bitrate, int frames) {
 	return bw;
 }
 
+QLatin1String AudioInput::getOpusApplicationType(){
+	int iOpusApplication;
+	QLatin1String qApplicationType = QLatin1String("N/A");
+
+	if(g.bOpus){
+		opus_encoder_ctl(opusState, OPUS_GET_APPLICATION(&iOpusApplication));
+
+		if(iOpusApplication == OPUS_APPLICATION_AUDIO)
+		{
+			qApplicationType = QLatin1String("Opus Audio");
+		}
+		else if(iOpusApplication == OPUS_APPLICATION_VOIP)
+		{
+			qApplicationType = QLatin1String("Opus VOIP");
+		}
+		else if(iOpusApplication == OPUS_APPLICATION_RESTRICTED_LOWDELAY)
+		{
+			qApplicationType = QLatin1String("Opus Restricted Low Delay");
+		}
+	}
+
+	return qApplicationType;
+}
+
+int AudioInput::getOpusComplexity(){
+	int complexity;
+
+	if(g.bOpus){
+		opus_encoder_ctl(opusState, OPUS_GET_COMPLEXITY(&complexity));
+	}
+	else {
+		complexity = -1;
+	}
+
+	return complexity;
+}
+
 void AudioInput::resetAudioProcessor() {
 	if (!bResetProcessor)
 		return;
@@ -915,7 +975,7 @@ void AudioInput::encodeAudioFrame() {
 
 	EncodingOutputBuffer buffer;
 	Q_ASSERT(buffer.size() >= static_cast<size_t>(iAudioQuality / 100 * iAudioFrames / 8));
-	
+
 	int len = 0;
 
 	bool encoded = true;
@@ -946,7 +1006,7 @@ void AudioInput::encodeAudioFrame() {
 				iBufferedFrames += missingFrames;
 				iFrameCounter += missingFrames;
 			}
-			
+
 			Q_ASSERT(iBufferedFrames == iAudioFrames);
 
 			len = encodeOpusFrame(&opusBuffer[0], iBufferedFrames * iFrameSize, buffer);

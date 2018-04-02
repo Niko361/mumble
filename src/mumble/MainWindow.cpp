@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget *p) : QMainWindow(p) {
 	// current open document (i.e. you can copy the open document anywhere
 	// simply by dragging this icon).
 	qApp->setWindowIcon(qiIcon);
-	
+
 	// Set the icon on the MainWindow directly. This fixes the icon not
 	// being set on the MainWindow in certain environments (Ex: GTK+).
 	setWindowIcon(qiIcon);
@@ -459,7 +459,7 @@ void MainWindow::closeEvent(QCloseEvent *e) {
 	g.bQuit = true;
 
 	QMainWindow::closeEvent(e);
-	
+
 	qApp->exit(restartOnQuit ? MUMBLE_EXIT_CODE_RESTART : 0);
 }
 
@@ -1017,7 +1017,7 @@ void MainWindow::setupView(bool toggle_minimize) {
 			f |= Qt::FramelessWindowHint;
 		}
 	}
-	
+
 	if (g.s.aotbAlwaysOnTop == Settings::OnTopAlways ||
 	        (g.s.bMinimalView && g.s.aotbAlwaysOnTop == Settings::OnTopInMinimal) ||
 	        (!g.s.bMinimalView && g.s.aotbAlwaysOnTop == Settings::OnTopInNormal)) {
@@ -1292,7 +1292,7 @@ void MainWindow::on_qaServerUserList_triggered() {
 
 static const QString currentCodec() {
 	if (g.bOpus)
-		return QLatin1String("Opus");
+		return QLatin1String("Opus ")+g.qsOpusEncodeApplication;
 
 	int v = g.bPreferAlpha ? g.iCodecAlpha : g.iCodecBeta;
 	CELTCodec* cc = g.qmCodecs.value(v);
@@ -1326,7 +1326,7 @@ void MainWindow::on_qaServerInformation_triggered() {
 	g.sh->getConnectionInfo(host,port,uname,pw);
 
 	const SSLCipherInfo *ci = SSLCipherInfoLookupByOpenSSLName(qsc.name().toLatin1().constData());
-	
+
 	QString cipherDescription;
 	if (ci && ci->message_authentication && ci->encryption && ci->key_exchange_verbose && ci->rfc_name) {
 		if (QString::fromLatin1(ci->message_authentication) == QLatin1String("AEAD")) {
@@ -1380,7 +1380,7 @@ void MainWindow::on_qaServerInformation_triggered() {
 		qsControl += tr("<p>Connected users: %1/%2</p>").arg(ModelItem::c_qhUsers.count()).arg(g.uiMaxUsers);
 	}
 
-	QString qsVoice, qsCrypt, qsAudio;
+	QString qsVoice, qsCrypt, qsAudio, qsOpus;
 
 	if (NetworkConfig::TcpModeEnabled()) {
 		qsVoice = tr("Voice channel is sent over control channel");
@@ -1398,7 +1398,9 @@ void MainWindow::on_qaServerInformation_triggered() {
 	}
 	qsAudio=tr("<h2>Audio bandwidth</h2><p>Maximum %1 kbit/s<br />Current %2 kbit/s<br />Codec: %3</p>").arg(g.iMaxBandwidth / 1000.0,0,'f',1).arg(g.iAudioBandwidth / 1000.0,0,'f',1).arg(currentCodec());
 
-	QMessageBox qmb(QMessageBox::Information, tr("Mumble Server Information"), qsVersion + qsControl + qsVoice + qsCrypt + qsAudio, QMessageBox::Ok, this);
+	qsOpus=tr("<h2>Opus Settings</h2><p>Encoder Complexity: %1<br />Encoder Application: %2</p>").arg(g.ai->getOpusComplexity()).arg(g.ai->getOpusApplicationType());
+
+	QMessageBox qmb(QMessageBox::Information, tr("Mumble Server Information"), qsVersion + qsControl + qsVoice + qsCrypt + qsAudio + qsOpus, QMessageBox::Ok, this);
 	qmb.setDefaultButton(QMessageBox::Ok);
 	qmb.setEscapeButton(QMessageBox::Ok);
 
@@ -2008,7 +2010,7 @@ void MainWindow::on_qaChannelJoin_triggered() {
 
 void MainWindow::on_qaChannelFilter_triggered() {
 	Channel *c = getContextMenuChannel();
-	
+
 	if (c) {
 		UserModel *um = static_cast<UserModel *>(qtvUsers->model());
 		um->toggleChannelFiltered(c);
@@ -2239,12 +2241,12 @@ void MainWindow::userStateChanged() {
 	if (g.s.bStateInTray) {
 		updateTrayIcon();
 	}
-	
+
 	ClientUser *user = ClientUser::get(g.uiSession);
 	if (user == NULL) {
 		g.bAttenuateOthers = false;
 		g.prioritySpeakerActiveOverride = false;
-		
+
 		return;
 	}
 
@@ -2257,7 +2259,7 @@ void MainWindow::userStateChanged() {
 			g.prioritySpeakerActiveOverride =
 			        g.s.bAttenuateUsersOnPrioritySpeak
 			        && user->bPrioritySpeaker;
-			
+
 			break;
 		case Settings::Passive:
 		default:
@@ -2273,7 +2275,7 @@ void MainWindow::on_qaAudioReset_triggered() {
 		ai->bResetProcessor = true;
 }
 
-void MainWindow::on_qaFilterToggle_triggered() {	
+void MainWindow::on_qaFilterToggle_triggered() {
 	g.s.bFilterActive = qaFilterToggle->isChecked();
 	updateUserModel();
 }
@@ -2376,17 +2378,17 @@ void MainWindow::on_qaConfigDialog_triggered() {
 		updateTransmitModeComboBox();
 		updateTrayIcon();
 		updateUserModel();
-		
+
 		if (g.s.requireRestartToApply) {
 			if (g.s.requireRestartToApply && QMessageBox::question(
 				        this,
 				        tr("Restart Mumble?"),
 				        tr("Some settings will only apply after a restart of Mumble. Restart Mumble now?"),
 				        QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
-		
+
 				bSuppressAskOnQuit = true;
 				restartOnQuit = true;
-				
+
 				close();
 			}
 		}
@@ -2697,7 +2699,7 @@ void MainWindow::removeTarget(ShortcutTarget *st)
 
 void MainWindow::on_gsCycleTransmitMode_triggered(bool down, QVariant)
 {
-	if (down) 
+	if (down)
 	{
 		QString qsNewMode;
 
@@ -2742,7 +2744,7 @@ void MainWindow::on_gsSendClipboardTextMessage_triggered(bool down, QVariant) {
 	}
 
 	// call sendChatbarMessage() instead of on_gsSendTextMessage_triggered() to handle
-	// formatting of the content in the clipboard, i.e., href.  
+	// formatting of the content in the clipboard, i.e., href.
 	sendChatbarMessage(QApplication::clipboard()->text());
 }
 
@@ -3247,4 +3249,3 @@ void MainWindow::destroyUserInformation() {
 		}
 	}
 }
-

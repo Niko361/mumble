@@ -149,7 +149,12 @@ struct Settings {
 	enum ServerShow { ShowPopulated, ShowReachable, ShowAll };
 	enum TalkState { Passive, Talking, Whispering, Shouting };
 	enum IdleAction { Nothing, Deafen, Mute };
+	enum OpusEnodeApplication{VOIP, Audio, RestrictedLowDelay};
+	enum OpusEncodeSignal{Auto, Voice, Music};
+
 	typedef QPair<QList<QSslCertificate>, QSslKey> KeyPair;
+
+
 
 	AudioTransmit atTransmit;
 	quint64 uiDoublePush;
@@ -203,6 +208,11 @@ struct Settings {
 	bool bAttenuateLoopbacks;
 	int iOutputDelay;
 	bool bUseOpusMusicEncoding;
+
+	bool bOPUSEnableVBR;
+
+	OpusEnodeApplication eOpusEncodeApplication;
+	OpusEncodeSignal eOpusEncodeSignal;
 
 	QString qsALSAInput, qsALSAOutput;
 	QString qsPulseAudioInput, qsPulseAudioOutput;
@@ -284,7 +294,7 @@ struct Settings {
 	QString themeName;
 	/// Name of the style to use from theme. @see Themes
 	QString themeStyleName;
-	
+
 	QByteArray qbaMainWindowGeometry, qbaMainWindowState, qbaMinimalViewGeometry, qbaMinimalViewState, qbaSplitterState, qbaHeaderState;
 	QByteArray qbaConfigGeometry;
 	enum WindowLayout { LayoutClassic, LayoutStacked, LayoutHybrid, LayoutCustom };
@@ -396,16 +406,16 @@ struct Settings {
 	int iRecordingFormat;
 
 	// Special configuration options not exposed to UI
-	
+
 	/// Codec kill-switch
 	bool bDisableCELT;
-	
+
 	/// Disables the "Public Internet" section in the connect dialog if set.
 	bool disablePublicList;
-	
+
 	/// Removes the add and edit options in the connect dialog if set.
 	bool disableConnectDialogEditing;
-	
+
 	// Config updates
 	unsigned int uiUpdateCounter;
 

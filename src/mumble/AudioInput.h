@@ -16,6 +16,9 @@
 #include <QtCore/QThread>
 #include <vector>
 
+#include <QtCore/QDir>
+#include <QString>
+
 #include "Audio.h"
 #include "Settings.h"
 #include "Timer.h"
@@ -74,9 +77,9 @@ class AudioInput : public QThread {
 
 		OpusEncoder *opusState;
 		bool selectCodec();
-		
+
 		typedef boost::array<unsigned char, 960> EncodingOutputBuffer;
-		
+
 		int encodeOpusFrame(short *source, int size, EncodingOutputBuffer& buffer);
 		int encodeCELTFrame(short *pSource, EncodingOutputBuffer& buffer);
 	protected:
@@ -157,6 +160,9 @@ class AudioInput : public QThread {
 
 		static int getNetworkBandwidth(int bitrate, int frames);
 		static void setMaxBandwidth(int bitspersec);
+
+		QLatin1String getOpusApplicationType();
+		int getOpusComplexity();
 
 		/// Construct an AudioInput.
 		///
