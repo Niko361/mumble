@@ -625,41 +625,84 @@ int AudioInput::getNetworkBandwidth(int bitrate, int frames) {
 	return bw;
 }
 
-QLatin1String AudioInput::getOpusApplicationType(){
-	int iOpusApplication;
+
+
+QString AudioInput::getOpusEncoderSettings(){
+
+	if(!g.bOpus)
+		return QLatin1String("N/A");
+
 	QLatin1String qApplicationType = QLatin1String("N/A");
+	QLatin1String qSignal = QLatin1String("N/A");
+	QLatin1String qBandwidth = QLatin1String("N/A");
+	int iComplexity=0;
+	int iBitrate=0;
+	int iInbandFEC=0;
+	int iVBR=0;
+	int iVBRConstraint=0;
 
-	if(g.bOpus){
-		opus_encoder_ctl(opusState, OPUS_GET_APPLICATION(&iOpusApplication));
 
-		if(iOpusApplication == OPUS_APPLICATION_AUDIO)
-		{
-			qApplicationType = QLatin1String("Opus Audio");
-		}
-		else if(iOpusApplication == OPUS_APPLICATION_VOIP)
-		{
-			qApplicationType = QLatin1String("Opus VOIP");
-		}
-		else if(iOpusApplication == OPUS_APPLICATION_RESTRICTED_LOWDELAY)
-		{
-			qApplicationType = QLatin1String("Opus Restricted Low Delay");
-		}
+	int iOpusApplication;
+	opus_encoder_ctl(opusState, OPUS_GET_APPLICATION(&iOpusApplication));
+	switch (iOpusApplication)
+	{
+		case OPUS_APPLICATION_AUDIO:
+			qApplicationType = QLatin1String("OPUS_APPLICATION_AUDIO");
+			break;
+		case OPUS_APPLICATION_VOIP:
+			qApplicationType = QLatin1String("OPUS_APPLICATION_AUDIO");
+			break;
+		case OPUS_APPLICATION_RESTRICTED_LOWDELAY:
+			qApplicationType = QLatin1String("OPUS_APPLICATION_RESTRICTED_LOWDELAY");
+			break;
 	}
 
-	return qApplicationType;
-}
-
-int AudioInput::getOpusComplexity(){
-	int complexity;
-
-	if(g.bOpus){
-		opus_encoder_ctl(opusState, OPUS_GET_COMPLEXITY(&complexity));
+	int iSignal;
+	opus_encoder_ctl(opusState, OPUS_GET_SIGNAL(&iSignal));
+	switch(iSignal)
+	{
+		case OPUS_AUTO:
+			qSignal = QLatin1String("OPUS_AUTO");
+			break;
+		case OPUS_SIGNAL_VOICE:
+			qSignal = QLatin1String("OPUS_SIGNAL_VOICE");
+			break;
+		case OPUS_SIGNAL_MUSIC:
+			qSignal = QLatin1String("OPUS_SIGNAL_MUSIC");
+			break;
 	}
-	else {
-		complexity = -1;
-	}
 
-	return complexity;
+	opus_encoder_ctl(opusState, OPUS_GET_BITRATE(&iBitrate));
+	opus_encoder_ctl(opusState, OPUS_GET_INBAND_FEC(&iInbandFEC));
+	opus_encoder_ctl(opusState, OPUS_GET_VBR(&iVBR));
+	opus_encoder_ctl(opusState, OPUS_GET_VBR_CONSTRAINT(&iVBRConstraint));
+	opus_encoder_ctl(opusState, OPUS_GET_COMPLEXITY(&iComplexity));
+
+	int iBandwidth;
+	opus_encoder_ctl(opusState, OPUS_GET_BANDWIDTH(&iBandwidth));
+	switch (iBandwidth)
+	{
+		case OPUS_AUTO:
+			qBandwidth = QLatin1String("OPUS_AUTO");
+			break;
+		case OPUS_BANDWIDTH_NARROWBAND:
+			qBandwidth = QLatin1String("OPUS_BANDWIDTH_NARROWBAND");
+			break;
+		case OPUS_BANDWIDTH_MEDIUMBAND:
+			qBandwidth = QLatin1String("OPUS_BANDWIDTH_MEDIUMBAND");
+			break;
+		case OPUS_BANDWIDTH_WIDEBAND:
+			qBandwidth = QLatin1String("OPUS_BANDWIDTH_WIDEBAND");
+			break;
+		case OPUS_BANDWIDTH_SUPERWIDEBAND:
+			qBandwidth = QLatin1String("OPUS_BANDWIDTH_SUPERWIDEBAND");
+			break;
+		case OPUS_BANDWIDTH_FULLBAND:
+			qBandwidth = QLatin1String("OPUS_BANDWIDTH_FULLBAND");
+			break;
+		}
+
+		return tr("%1 %2 %3kbit/s InbandFEC:%4 VBR:%5 VBR_CONSTRAINT:%6 %7 Complexity:%8").arg(qApplicationType).arg(qSignal).arg(iBitrate).arg(iInbandFEC).arg(iVBR).arg(iVBRConstraint).arg(qBandwidth).arg(iComplexity);
 }
 
 void AudioInput::resetAudioProcessor() {

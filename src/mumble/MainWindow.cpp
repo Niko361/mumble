@@ -1380,7 +1380,7 @@ void MainWindow::on_qaServerInformation_triggered() {
 		qsControl += tr("<p>Connected users: %1/%2</p>").arg(ModelItem::c_qhUsers.count()).arg(g.uiMaxUsers);
 	}
 
-	QString qsVoice, qsCrypt, qsAudio, qsOpus;
+	QString qsVoice, qsCrypt, qsAudio, qsOpusEncoderInfo;
 
 	if (NetworkConfig::TcpModeEnabled()) {
 		qsVoice = tr("Voice channel is sent over control channel");
@@ -1398,9 +1398,9 @@ void MainWindow::on_qaServerInformation_triggered() {
 	}
 	qsAudio=tr("<h2>Audio bandwidth</h2><p>Maximum %1 kbit/s<br />Current %2 kbit/s<br />Codec: %3</p>").arg(g.iMaxBandwidth / 1000.0,0,'f',1).arg(g.iAudioBandwidth / 1000.0,0,'f',1).arg(currentCodec());
 
-	qsOpus=tr("<h2>Opus Settings</h2><p>Encoder Complexity: %1<br />Encoder Application: %2</p>").arg(g.ai->getOpusComplexity()).arg(g.ai->getOpusApplicationType());
+	qsOpusEncoderInfo=tr("<h2>Opus Encoder Settings</h2><p>%1").arg(g.ai->getOpusEncoderSettings());
 
-	QMessageBox qmb(QMessageBox::Information, tr("Mumble Server Information"), qsVersion + qsControl + qsVoice + qsCrypt + qsAudio + qsOpus, QMessageBox::Ok, this);
+	QMessageBox qmb(QMessageBox::Information, tr("Mumble Server Information"), qsVersion + qsControl + qsVoice + qsCrypt + qsAudio + qsOpusEncoderInfo, QMessageBox::Ok, this);
 	qmb.setDefaultButton(QMessageBox::Ok);
 	qmb.setEscapeButton(QMessageBox::Ok);
 

@@ -161,8 +161,7 @@ class AudioInput : public QThread {
 		static int getNetworkBandwidth(int bitrate, int frames);
 		static void setMaxBandwidth(int bitspersec);
 
-		QLatin1String getOpusApplicationType();
-		int getOpusComplexity();
+		QString getOpusEncoderSettings();
 
 		/// Construct an AudioInput.
 		///
