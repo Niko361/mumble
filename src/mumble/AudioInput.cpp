@@ -118,6 +118,7 @@ AudioInput::AudioInput() : opusBuffer(g.s.iFramesPerPacket * (SAMPLE_RATE / 100)
 	opus_encoder_ctl(opusState, OPUS_SET_SIGNAL(opusSignal));
 	opus_encoder_ctl(opusState, OPUS_SET_VBR(g.s.bOPUSEnableVBR));
 	opus_encoder_ctl(opusState, OPUS_SET_COMPLEXITY(10));
+	opus_encoder_ctl(opusState, OPUS_SET_BITRATE(iAudioQuality));
 #endif
 
 	qWarning("AudioInput: %d bits/s, %d hz, %d sample", iAudioQuality, iSampleRate, iFrameSize);
@@ -702,7 +703,7 @@ QString AudioInput::getOpusEncoderSettings(){
 			break;
 		}
 
-		return tr("%1 %2 %3kbit/s InbandFEC:%4 VBR:%5 VBR_CONSTRAINT:%6 %7 Complexity:%8").arg(qApplicationType).arg(qSignal).arg(iBitrate).arg(iInbandFEC).arg(iVBR).arg(iVBRConstraint).arg(qBandwidth).arg(iComplexity);
+		return tr("%1 %2 %3bit/s InbandFEC:%4 VBR:%5 VBR_CONSTRAINT:%6 %7 Complexity:%8 iAudioQuality:%9").arg(qApplicationType).arg(qSignal).arg(iBitrate).arg(iInbandFEC).arg(iVBR).arg(iVBRConstraint).arg(qBandwidth).arg(iComplexity).arg(iAudioQuality);
 }
 
 void AudioInput::resetAudioProcessor() {

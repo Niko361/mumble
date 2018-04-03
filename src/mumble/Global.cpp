@@ -84,8 +84,6 @@ Global::Global() {
 	iAudioBandwidth = -1;
 	iMaxBandwidth = -1;
 
-	qsOpusEncodeApplication = QLatin1String("N/A");
-
 	iCodecAlpha = 0;
 	iCodecBeta = 0;
 	bPreferAlpha = true;

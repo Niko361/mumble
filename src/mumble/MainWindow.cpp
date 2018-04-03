@@ -1292,7 +1292,7 @@ void MainWindow::on_qaServerUserList_triggered() {
 
 static const QString currentCodec() {
 	if (g.bOpus)
-		return QLatin1String("Opus ")+g.qsOpusEncodeApplication;
+		return QLatin1String("Opus");
 
 	int v = g.bPreferAlpha ? g.iCodecAlpha : g.iCodecBeta;
 	CELTCodec* cc = g.qmCodecs.value(v);

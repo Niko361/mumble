@@ -70,8 +70,6 @@ public:
 	ChanACL::Permissions pPermissions;
 	int iMaxBandwidth;
 
-	QString qsOpusEncodeApplication;
-
 	int iAudioBandwidth;
 	QDir qdBasePath;
 	QMap<int, CELTCodec *> qmCodecs;
