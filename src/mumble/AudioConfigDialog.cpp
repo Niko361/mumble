@@ -81,6 +81,14 @@ AudioInputDialog::AudioInputDialog(Settings &st) : ConfigWidget(st) {
 	qcbTransmit->addItem(tr("Voice Activity"), Settings::VAD);
 	qcbTransmit->addItem(tr("Push To Talk"), Settings::PushToTalk);
 
+	qcbApplication->addItem(tr("VOIP"), Settings::OpusEncodeApplication::VOIP);
+	qcbApplication->addItem(tr("Audio"), Settings::OpusEncodeApplication::Audio);
+	qcbApplication->addItem(tr("Restricted Low Delay"), Settings::OpusEncodeApplication::RestrictedLowDelay);
+
+	qcbSignal->addItem(tr("Auto"), Settings::OpusEncodeSignal::Auto);
+	qcbSignal->addItem(tr("Voice"), Settings::OpusEncodeSignal::Voice);
+	qcbSignal->addItem(tr("Music"), Settings::OpusEncodeSignal::Music);
+
 	abSpeech->qcBelow = Qt::red;
 	abSpeech->qcInside = Qt::yellow;
 	abSpeech->qcAbove = Qt::green;
@@ -150,6 +158,12 @@ void AudioInputDialog::load(const Settings &r) {
 		echo = r.bEchoMulti ? 2 : 1;
 
 	loadComboBox(qcbEcho, echo);
+
+
+	loadComboBox(qcbApplication, r.eOpusEncodeApplication);
+	loadComboBox(qcbSignal, r.eOpusEncodeSignal);
+	loadCheckBox(qcbEnableVBR, r.bOpusEnableVBR);
+	loadCheckBox(qcbEnableConstrainedVBR, r.bOpusEnableConstrainedVBR);
 }
 
 void AudioInputDialog::save() const {
@@ -166,6 +180,9 @@ void AudioInputDialog::save() const {
 	s.pttHold = qsPTTHold->value();
 	s.atTransmit = static_cast<Settings::AudioTransmit>(qcbTransmit->currentIndex());
 
+	s.eOpusEncodeApplication = static_cast<Settings::OpusEncodeApplication>(qcbApplication->currentIndex());
+        s.eOpusEncodeSignal = static_cast<Settings::OpusEncodeSignal>(qcbSignal->currentIndex());
+
 	// Idle auto actions
 	s.iIdleTime = qsbIdle->value() * 60;
 	s.iaeIdleAction = static_cast<Settings::IdleAction>(qcbIdleAction->currentIndex());
@@ -180,6 +197,9 @@ void AudioInputDialog::save() const {
 	s.bEcho = qcbEcho->currentIndex() > 0;
 	s.bEchoMulti = qcbEcho->currentIndex() == 2;
 	s.bExclusiveInput = qcbExclusive->isChecked();
+
+        s.bOpusEnableVBR = qcbEnableVBR->isChecked();
+        s.bOpusEnableConstrainedVBR = qcbEnableConstrainedVBR->isChecked();
 
 	if (AudioInputRegistrar::qmNew) {
 		AudioInputRegistrar *air = AudioInputRegistrar::qmNew->value(qcbSystem->currentText());
@@ -235,7 +255,7 @@ void AudioInputDialog::on_qsNoise_valueChanged(int v) {
 void AudioInputDialog::on_qsAmp_valueChanged(int v) {
 	v = 18000 - v + 2000;
 	float d = 20000.0f/static_cast<float>(v);
-	qlAmp->setText(QString::fromLatin1("%1").arg(d, 0, 'f', 2));
+        qlAmp->setText(QString::fromLatin1("%1").arg(d, 0, 'f', 2));
 }
 
 void AudioInputDialog::updateBitrate() {

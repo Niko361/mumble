@@ -255,8 +255,8 @@ Settings::Settings() {
 	bOpusEnableVBR = false;
 	bOpusEnableConstrainedVBR = false;
 
-	eOpusEncodeApplication = Audio;
-	eOpusEncodeSignal = Music;
+	eOpusEncodeApplication = VOIP;
+	eOpusEncodeSignal = Voice;
 
 
 
@@ -641,11 +641,8 @@ void Settings::load(QSettings* settings_ptr) {
 	SAVELOAD(bWhisperFriends, "audio/whisperfriends");
 	SAVELOAD(bTransmitPosition, "audio/postransmit");
 
-	SAVELOAD(bUseOpusMusicEncoding, "codec/opus/encoder/music");
-
 	SAVELOAD(bOpusEnableVBR, "codec/opusenablevbr");
 	SAVELOAD(bOpusEnableConstrainedVBR, "codec/opusenableconstrainedvbr");
-
 
 	LOADENUM(eOpusEncodeApplication, "codec/opusencodeapplication");
 	LOADENUM(eOpusEncodeSignal, "codec/opusencodesignal");
@@ -984,7 +981,11 @@ void Settings::save() {
 	SAVELOAD(bWhisperFriends, "audio/whisperfriends");
 	SAVELOAD(bTransmitPosition, "audio/postransmit");
 
-	SAVELOAD(bUseOpusMusicEncoding, "codec/opus/encoder/music");
+	SAVELOAD(bOpusEnableVBR, "codec/opusenablevbr");
+	SAVELOAD(bOpusEnableConstrainedVBR, "codec/opusenableconstrainedvbr");
+
+	SAVELOAD(eOpusEncodeApplication, "codec/opusencodeapplication");
+	SAVELOAD(eOpusEncodeSignal, "codec/opusencodesignal");
 
 	SAVELOAD(iJitterBufferSize, "net/jitterbuffer");
 	SAVELOAD(iFramesPerPacket, "net/framesperpacket");

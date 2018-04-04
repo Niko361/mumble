@@ -149,7 +149,7 @@ struct Settings {
 	enum ServerShow { ShowPopulated, ShowReachable, ShowAll };
 	enum TalkState { Passive, Talking, Whispering, Shouting };
 	enum IdleAction { Nothing, Deafen, Mute };
-	enum OpusEnodeApplication{VOIP, Audio, RestrictedLowDelay};
+	enum OpusEncodeApplication{VOIP, Audio, RestrictedLowDelay};
 	enum OpusEncodeSignal{Auto, Voice, Music};
 
 	typedef QPair<QList<QSslCertificate>, QSslKey> KeyPair;
@@ -212,7 +212,7 @@ struct Settings {
 	bool bOpusEnableVBR;
 	bool bOpusEnableConstrainedVBR;
 
-	OpusEnodeApplication eOpusEncodeApplication;
+	OpusEncodeApplication eOpusEncodeApplication;
 	OpusEncodeSignal eOpusEncodeSignal;
 
 	QString qsALSAInput, qsALSAOutput;

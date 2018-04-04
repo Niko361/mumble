@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>610</width>
-    <height>792</height>
+    <height>888</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -457,6 +457,12 @@
    </item>
    <item>
     <widget class="QGroupBox" name="qgbCompression">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="title">
       <string>Compression</string>
      </property>
@@ -583,66 +589,83 @@
    </item>
    <item>
     <widget class="QGroupBox" name="qgbOpusEncoder">
-      <property name="title">
-        <string>Opus Encoder Settings</string>
-      </property>
-      <layout class="QGridLayout">
-        <item row="0" column="0">
-          <widget class="QLabel" name="qliApplication">
-           <property name="text">
-            <string>Application</string>
-           </property>
-           <property name="buddy">
-            <cstring>qcbApplication</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" colspan="2">
-          <widget class="MUComboBox" name="qcbApplication">
-           <property name="toolTip">
-            <string>Select the Opus Encoder's Application</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-           <widget class="QLabel" name="qliSignal">
-            <property name="text">
-             <string>Signal</string>
-            </property>
-            <property name="buddy">
-             <cstring>qcbSignal</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1" colspan="2">
-           <widget class="MUComboBox" name="qcbSignal">
-            <property name="toolTip">
-             <string>Select the Opus Encoder's Signal Type</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="qcbEnableVBR">
-            <property name="toolTip">
-             <string>Enable Variable Bitrate in the Opus Encoder</string>
-            </property>
-            <property name="text">
-             <string>VBR</string>
-            </property>
-           </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QCheckBox" name="qcbEnableConstrainedVBR">
-           <property name="toolTip">
-            <string>Constrain Opus' VBR Bitrate</string>
-           </property>
-           <property name="text">
-            <string>Constrained VBR</string>
-           </property>
-          </widget>
-        </item>
-      </layout>
-
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Opus Encoder Settings</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="qliApplication">
+        <property name="text">
+         <string>Application</string>
+        </property>
+        <property name="buddy">
+         <cstring>qcbApplication</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="MUComboBox" name="qcbApplication">
+        <property name="toolTip">
+         <string>Select the Opus Encoder's Application</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="qliSignal">
+        <property name="text">
+         <string>Signal</string>
+        </property>
+        <property name="buddy">
+         <cstring>qcbSignal</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="MUComboBox" name="qcbSignal">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Select the Opus Encoder's Signal Type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="qcbEnableVBR">
+        <property name="toolTip">
+         <string>Enable Variable Bitrate in the Opus Encoder</string>
+        </property>
+        <property name="text">
+         <string>VBR</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="qcbEnableConstrainedVBR">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Constrain Opus' VBR Bitrate</string>
+        </property>
+        <property name="text">
+         <string>Constrained VBR</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
