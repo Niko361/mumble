@@ -252,7 +252,8 @@ Settings::Settings() {
 	fVADmax = 0.98f;
 
 	bUseOpusMusicEncoding = true;
-	bOPUSEnableVBR = false;
+	bOpusEnableVBR = false;
+	bOpusEnableConstrainedVBR = false;
 
 	eOpusEncodeApplication = Audio;
 	eOpusEncodeSignal = Music;
@@ -642,7 +643,9 @@ void Settings::load(QSettings* settings_ptr) {
 
 	SAVELOAD(bUseOpusMusicEncoding, "codec/opus/encoder/music");
 
-	SAVELOAD(bOPUSEnableVBR, "codec/opusenablevbr");
+	SAVELOAD(bOpusEnableVBR, "codec/opusenablevbr");
+	SAVELOAD(bOpusEnableConstrainedVBR, "codec/opusenableconstrainedvbr");
+
 
 	LOADENUM(eOpusEncodeApplication, "codec/opusencodeapplication");
 	LOADENUM(eOpusEncodeSignal, "codec/opusencodesignal");

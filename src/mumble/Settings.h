@@ -209,7 +209,8 @@ struct Settings {
 	int iOutputDelay;
 	bool bUseOpusMusicEncoding;
 
-	bool bOPUSEnableVBR;
+	bool bOpusEnableVBR;
+	bool bOpusEnableConstrainedVBR;
 
 	OpusEnodeApplication eOpusEncodeApplication;
 	OpusEncodeSignal eOpusEncodeSignal;

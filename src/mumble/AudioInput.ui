@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>569</width>
-    <height>730</height>
+    <width>610</width>
+    <height>792</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -87,7 +87,7 @@
          <string>&lt;b&gt;This is the input device to use for audio.&lt;/b&gt;</string>
         </property>
         <property name="sizeAdjustPolicy">
-         <enum>MUComboBox::AdjustToMinimumContentsLength</enum>
+         <enum>QComboBox::AdjustToContents</enum>
         </property>
         <property name="minimumContentsLength">
          <number>16</number>
@@ -582,6 +582,70 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="qgbOpusEncoder">
+      <property name="title">
+        <string>Opus Encoder Settings</string>
+      </property>
+      <layout class="QGridLayout">
+        <item row="0" column="0">
+          <widget class="QLabel" name="qliApplication">
+           <property name="text">
+            <string>Application</string>
+           </property>
+           <property name="buddy">
+            <cstring>qcbApplication</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" colspan="2">
+          <widget class="MUComboBox" name="qcbApplication">
+           <property name="toolTip">
+            <string>Select the Opus Encoder's Application</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+           <widget class="QLabel" name="qliSignal">
+            <property name="text">
+             <string>Signal</string>
+            </property>
+            <property name="buddy">
+             <cstring>qcbSignal</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="MUComboBox" name="qcbSignal">
+            <property name="toolTip">
+             <string>Select the Opus Encoder's Signal Type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="qcbEnableVBR">
+            <property name="toolTip">
+             <string>Enable Variable Bitrate in the Opus Encoder</string>
+            </property>
+            <property name="text">
+             <string>VBR</string>
+            </property>
+           </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="qcbEnableConstrainedVBR">
+           <property name="toolTip">
+            <string>Constrain Opus' VBR Bitrate</string>
+           </property>
+           <property name="text">
+            <string>Constrained VBR</string>
+           </property>
+          </widget>
+        </item>
+      </layout>
+
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="qgbAudio">
      <property name="title">
       <string>Audio Processing</string>
@@ -686,6 +750,20 @@
       <string>Misc</string>
      </property>
      <layout class="QGridLayout" name="_2">
+      <item row="2" column="4">
+       <widget class="QLineEdit" name="qlePushClickPathOff">
+        <property name="toolTip">
+         <string>Gets played when stopping to transmit</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="qlePushClickPathOn">
+        <property name="toolTip">
+         <string>Gets played when starting to transmit</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="5">
        <widget class="QPushButton" name="qpbPushClickBrowseOff">
         <property name="toolTip">
@@ -749,20 +827,6 @@
         </property>
         <property name="text">
          <string>&amp;Browse...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLineEdit" name="qlePushClickPathOn">
-        <property name="toolTip">
-         <string>Gets played when starting to transmit</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QLineEdit" name="qlePushClickPathOff">
-        <property name="toolTip">
-         <string>Gets played when stopping to transmit</string>
         </property>
        </widget>
       </item>
@@ -901,6 +965,8 @@
   <tabstop>qcbDevice</tabstop>
   <tabstop>qcbEcho</tabstop>
   <tabstop>qcbTransmit</tabstop>
+  <tabstop>qcbApplication</tabstop>
+  <tabstop>qcbSignal</tabstop>
   <tabstop>qsDoublePush</tabstop>
   <tabstop>qrbSNR</tabstop>
   <tabstop>qsTransmitHold</tabstop>
